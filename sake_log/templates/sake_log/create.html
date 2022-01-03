@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block main %}
+<div class="col-11 mt-5 mx-auto bg-white rounded border border-danger p-4 shadow-sm">
+    <h1  class="heading text-center bg-danger text-white py-2 mb-4">ドリンクの追加</h1>
+    <form method="post" novalidate>
+        {% for item in form %}
+        <div class="form-group mb-4">
+            {{ item.label_tag }}
+            {{ item }}
+        </div>
+        {% endfor %}
+        {% csrf_token %}
+    <div class="row mt-4">
+        <div class="col-6">
+            <a href="{% url 'sake_log:index' %}" class="btn btn-outline-secondary">戻る</a>
+        </div>
+        <div class="col-6">
+            <div class="text-right">
+                <input type="submit" class="btn btn-outline-danger" value="追加">
+            </div>
+        </div>
+    </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block main %}
+
+{% block graph %}
+{% endblock %}
+
+<div class="row">
+{% for drink in drinks %}
+<div class="col-12 col-lg-6">
+    <!-- 同じカードスタイルだと押せると思われるから、
+    履歴表示を強調したスタイルにする -->
+    <div class="card rounded mb-2">
+            <div class="container">
+                <div class="row py-2">
+                    <div class="col- pl-3 d-flex align-items-center">
+                        <span class="align-middle drink-name">{{ drink.name }}({{ drink.amount }}) {{ drink.alcohol_degree }}% {{ drink.created_at|date }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block main %}
+<div class="col-11 col-md-6 mt-5 mx-auto bg-white rounded border border-danger p-4 shadow-sm">
+    <h1  class="heading text-center bg-danger text-white py-2 px-3">本当に{{ drink.name }}を削除してもいいですか？</h1>
+    <div class="row mt-5">
+        <div class="col-6 mb-2 pr-0 text-right">
+            名前：
+        </div>
+        <div class="col-6 pl-0">
+            {{ drink.name }}
+        </div>
+        <div class="col-6 mb-2 pr-0 text-right">
+            アルコール度数：
+        </div>
+        <div class="col-6 pl-0">
+            {{ drink.alcohol_degree }}%
+        </div>
+        <div class="col-6 mb-2 pr-0 text-right">
+            サイズ：
+        </div>
+        <div class="col-6 pl-0">
+            {{ drink.get_amount_display }}
+        </div>
+        <div class="col-6 mb-2 pr-0 text-right">
+            メモ：
+        </div>
+        <div class="col-6 pl-0">
+            {{ drink.memo }}
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-6">
+            <a href="{% url 'sake_log:edit' drink.id %}" class="btn btn-outline-secondary">戻る</a>
+        </div>
+        <div class="col-6 ml-auto">
+            <div class="text-right">
+                <form class="" method="post">
+                    {% csrf_token %}
+                    <input type="submit" class="btn btn-danger" value="削除する">
+                </form>
+            </div>
+        </div>
+    </div>
+    </form>
+</div>
+{% endblock %}
+
+<h1></h1>
+

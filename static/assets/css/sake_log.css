@@ -1,0 +1,42 @@
+.bg-color {
+    background: #FAFAFA;
+}
+.wrapper {
+    min-height: 100vh;
+}
+.text-dark-light {
+   color: #4a4a4a;
+}
+a:hover {
+    text-decoration: none;
+}
+.inline {
+    display: inline-block;
+}
+.heading {
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+}
+.logo {
+    font-family: ab-tsurumaru, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+}
+.al-g {
+    font-size: 2.5rem;
+}
+.drink-name {
+    font-size: 18px;
+    color: #4a4a4a;
+}
+.degree-btn {
+    position: relative;
+    z-index: 2;
+}
+.plus-icon {
+    font-size: 18px;
+    line-height: 38px;
+}
+ .text-pink {
+    color: #ff3512;
+}

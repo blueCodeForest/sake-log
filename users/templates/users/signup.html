@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block main %}
+<div class="row">
+    <div class="col-md-7 offset-md-3 mt-5">
+            <form action="" method="POST">
+            <div class="card rounded border border-danger p-4 shadow-sm">
+                <div class="card-body">
+                        {{ form.non_field_errors }}
+                    {% for field in form %}
+                        {{ field }}
+                        {{ field.errors }}
+                        <hr>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-danger btn-lg btn-block" >新規登録する</button>
+                    <input type="hidden" name="next" value="{{ next }}" />
+                    {% csrf_token %}
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

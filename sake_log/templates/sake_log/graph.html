@@ -1,0 +1,8 @@
+{% extends "sake_log/drank_list.html" %}
+{% load static %}
+
+{% block graph %}
+<div class="col-11 mt-5 mx-auto bg-white rounded border border-danger p-4 shadow-sm">
+    <img class="img-responsive center-block" src="data:image/png;base64, {{ graph | safe }}" alt="折れ線グラフ">
+</div>
+{% endblock %}
