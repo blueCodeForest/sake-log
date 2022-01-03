@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 import debug_toolbar
 
-from .settings import DEBUG
+from .config.settings import DEBUG
 
 urlpatterns = [
     path('admin', admin.site.urls),
