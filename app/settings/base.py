@@ -12,15 +12,23 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 import dj_database_url
 import os
+from os.path import join
+from dotenv import load_dotenv
+
+load_dotenv(verbose=True)
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+
+dotenv_path = join(BASE_DIR, '.env')
+load_dotenv(dotenv_path)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-3k)#nsflgd9hdom#v$7xs-by%m@p)31e0_7m3$sb8pb$mt)!38'
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 
 ALLOWED_HOSTS = ['sake-log.herokuapp.com']
@@ -141,7 +149,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 DEBUG = False
 
 try:
-    from .local_settings import *
+    from .local import *
 except ImportError:
     pass
 

@@ -1,5 +1,5 @@
-venv
+venv/
 staticfiles
 db.sqlite3
-app/settings/local_settings.py
+app/settings/local.py
 .env
