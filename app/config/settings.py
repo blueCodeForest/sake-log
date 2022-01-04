@@ -147,8 +147,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 DEBUG = False
 
 try:
-    from local_settings import *
+    from .local_settings import *
+    print('settings.py -> try')
 except ImportError:
+    print('settings.py -> except')
     pass
 
 if not DEBUG:
