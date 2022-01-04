@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 import debug_toolbar
 
-from .config.settings import DEBUG
+from .settings.base import DEBUG
 
 # デプロイ500エラー解明のための一時的な処理
 from sake_log import views
