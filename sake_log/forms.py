@@ -1,5 +1,4 @@
 from django import forms
-from django.core.validators import MaxValueValidator, MinValueValidator
 
 from .models import DisplayAlcoholList, StatusList
 

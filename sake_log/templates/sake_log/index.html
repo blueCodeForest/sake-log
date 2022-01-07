@@ -32,7 +32,7 @@
             <div class="container">
                 <div class="row py-2">
                     <div class="col-8 pl-3 d-flex align-items-center">
-                        <span class="align-middle drink-name">{{ drink.name }}({{ drink.amount }})</a> <span class="font-weight-bold text-danger ml-2 pr-1">{% if drink.drank_cards %}{{ drink.drank_cards.count }}{% else %}0{% endif %}</span>杯</span>
+                        <span class="align-middle drink-name">{{ drink.name }}({{ drink.amount }})</a> <span class="font-weight-bold text-danger ml-2 pr-1">{{ drink.cups }}</span>杯</span>
                     </div>
                     <div class="col-4 d-flex align-items-center justify-content-end">
                         <form class="inline" action="{% url 'sake_log:count_up' %}" method="POST">

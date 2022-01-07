@@ -1,15 +1,16 @@
 import io
 # import seaborn as sns
 # sns.set()
-import base64
+from datetime import datetime
 
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, UpdateView, CreateView, DeleteView
-from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Count, Q
 
 from .models import DisplayAlcoholList, DrankAlcoholList, StatusList
 from .forms import StatusForm, DrinkForm
+from .date import *
 
 # 500エラー原因究明の一時的な処理
 # from django.views.decorators.csrf import requires_csrf_token
@@ -23,7 +24,6 @@ from .forms import StatusForm, DrinkForm
 #     return HttpResponseServerError(error_html)
 # ここまで
 
-
 class IndexView(LoginRequiredMixin, ListView):
     template_name = 'sake_log/index.html'
     model = DisplayAlcoholList
@@ -31,7 +31,7 @@ class IndexView(LoginRequiredMixin, ListView):
 
     def calc_sum_alcohol_amount(self):
         # 正味アルコール摂取量を合計する
-        drinks = DrankAlcoholList.objects.filter(user=self.request.user)
+        drinks = DrankAlcoholList.objects.filter(user=self.request.user, created_at__range=[get_standard_dt(), datetime.now()])
         sum_alcohol_amount = 0
         for drink in drinks:
             sum_alcohol_amount += drink.get_1cup_alcohol_amount()
@@ -40,7 +40,11 @@ class IndexView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        # 摂取した総アルコール量
         context['sum_alcohol_amount'] = self.calc_sum_alcohol_amount()
+
+        # 酔い度合い
         status_form = StatusForm()
         context['status_form'] = status_form
         status = StatusList.objects.filter(user=self.request.user).order_by('-created_at').first()
@@ -53,55 +57,41 @@ class IndexView(LoginRequiredMixin, ListView):
     
     def get_queryset(self, **kwargs):
         queryset = super().get_queryset(**kwargs)
-        queryset = queryset.filter(user=self.request.user)
+
+        # 基準時間以降に飲んだ量をcups変数にセット
+        queryset = queryset.filter(user=self.request.user).annotate(cups=Count('drank_cards', filter=Q(drank_cards__created_at__gte=get_standard_dt())))
 
         return queryset
         
 
 class DrankAlcoholView(LoginRequiredMixin, ListView):
-    template_name = 'sake_log/graph.html'
+    template_name = 'sake_log/log.html'
     model = DrankAlcoholList
     context_object_name = 'drinks'
 
-    # def get_queryset(self):
-    #     qs = super().get_queryset().filter(user=self.request.user)
-    #     return qs
+    # 履歴の取得範囲を設定
+    def get_start_day(self):
+        term = self.kwargs['term']
+        start_day = datetime.now()
 
-    # def create_graph(self, x_list, t_list):
-    #     plt.cla() # 現在のグラフを消去する
-    #     fig = plt.figure(figsize=(10, 7.5), dpi=100, facecolor='w') # 台紙を作成
-    #     ax = fig.add_subplot(111, xlabel='yoko', ylabel='tate') # 軸を追加
-    #     ax.plot(t_list, x_list, label="x") # 折れ線グラフを追加
+        if term == 'all':
+            start_day = DrankAlcoholList.objects.earliest('created_at').created_at
+        elif term == 'half_year':
+            start_day = get_standard_dt(months=6)
+        elif term == 'month':
+            start_day = get_standard_dt(months=1)
+        elif term == '7days':
+            start_day = get_standard_dt(days=7)
+        elif term == 'today':
+            start_day = get_standard_dt()
 
-    # def get_image(self):
-    #     buffer = io.BytesIO()
-    #     plt.savefig(buffer, format='png')
-    #     image_png = buffer.getvalue()
-    #     graph = base64.b64encode(image_png)
-    #     graph = graph.decode('utf-8')
-    #     buffer.close()
-    #     return graph
+        return start_day
 
-    # def draw_graph(self):
-    #     x_list = [3, 6, 12, 24, 48, 96, 192, 384, 768, 1536]
-    #     t_list = [1,2,3,4,5,6,7,8,9,10]
-    #     self.create_graph(x_list, t_list)
-    #     graph = self.get_image()
-    #     return graph
+    def get_queryset(self, **kwargs):
+        queryset = super().get_queryset(**kwargs)
+        queryset = queryset.filter(created_at__range=[self.get_start_day(), datetime.now()])
 
-    # def seaborn(self):
-    #     df = sns.load_dataset('titanic')
-    #     graph = sns.lineplot(x="timepoint", y="signal", data=df, ci=none)
-    #     return graph
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        # この1行を実行するとエラーになる。なぜ？
-        context['graph'] = self.seaborn()
-
-        return context
-    
+        return queryset
 
 def count_up(request):
     drank_card_id = request.POST.get('drank_card_id')

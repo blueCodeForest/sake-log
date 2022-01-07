@@ -2,30 +2,33 @@
 
 {% block main %}
 <div class="col-11 col-md-6 mt-5 mx-auto bg-white rounded border border-danger p-4 shadow-sm">
-    <h1  class="heading text-center bg-danger text-white py-2 px-3">本当に{{ drink.name }}を削除してもいいですか？</h1>
-    <div class="row mt-5">
-        <div class="col-6 mb-2 pr-0 text-right">
+    <h1  class="heading text-center bg-danger text-white py-2 px-3">本当に{{ drink.name }}を削除してもいいですか？</h1>
+    <div class="row mt-3">
+        <div class="col-12 text-center text-danger">
+            <p>※過去に飲んだ記録も一緒に削除されます。</p>
+        </div>
+        <div class="col-3 mb-2 pr-0 text-right">
             名前：
         </div>
-        <div class="col-6 pl-0">
+        <div class="col-9 pl-0">
             {{ drink.name }}
         </div>
-        <div class="col-6 mb-2 pr-0 text-right">
-            アルコール度数：
+        <div class="col-3 mb-2 pr-0 text-right">
+            度数：
         </div>
-        <div class="col-6 pl-0">
+        <div class="col-9 pl-0">
             {{ drink.alcohol_degree }}%
         </div>
-        <div class="col-6 mb-2 pr-0 text-right">
+        <div class="col-3 mb-2 pr-0 text-right">
             サイズ：
         </div>
-        <div class="col-6 pl-0">
+        <div class="col-9 pl-0">
             {{ drink.get_amount_display }}
         </div>
-        <div class="col-6 mb-2 pr-0 text-right">
+        <div class="col-3 mb-2 pr-0 text-right">
             メモ：
         </div>
-        <div class="col-6 pl-0">
+        <div class="col-9 pl-0">
             {{ drink.memo }}
         </div>
     </div>
