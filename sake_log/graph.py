@@ -10,8 +10,9 @@ from .calc import *
 from .date import *
 
 #グラフ作成
-def setPlt(term):
-    qs = AlcoholLogList.objects.filter(created_at__gte=get_start_day(term)).order_by('created_at')
+def setPlt(request):
+    term = request.GET['term']
+    qs = AlcoholLogList.objects.filter(user=request.user, created_at__gte=get_start_day(term)).order_by('created_at')
     x = get_graph_data(qs, term)['x']
     y = get_graph_data(qs, term)['y']
 

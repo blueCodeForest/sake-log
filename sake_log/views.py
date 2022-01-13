@@ -84,7 +84,7 @@ class AlcoholLogView(LoginRequiredMixin, ListView):
 
 # グラフを描画する
 def get_graph(request):
-    setPlt(request.GET['term'])  
+    setPlt(request)  
     svg = plt2svg()  #SVG化
     plt.cla()  # グラフをリセット
     response = HttpResponse(svg, content_type='image/svg+xml')
