@@ -20,8 +20,8 @@ import debug_toolbar
 from .settings.base import DEBUG
 
 # デプロイ500エラー解明のための一時的な処理
-# from sake_log import views
-# handler500 = views.my_customized_server_error
+from sake_log import views
+handler500 = views.my_customized_server_error
 # ここまで
 
 urlpatterns = [
