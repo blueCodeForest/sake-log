@@ -1,7 +1,7 @@
 import datetime
 from dateutil.relativedelta import relativedelta
 from dateutil import tz
-from .date import *
+from .date import get_am6_dt
 
 
 
@@ -103,11 +103,27 @@ def get_graph_data_today(qs):
     y_data = []
     sum_alcohol = 0
 
-    # 累計アルコール摂取量を加算していく。
-    for q in qs:
-        sum_alcohol += q.get_1cup_alcohol_amount()
-        x_data.append(q.created_at.astimezone(tz.gettz('Asia/Tokyo')))
-        y_data.append(sum_alcohol)
+    # データが空の場合、0をプロットする
+    if qs.count() == 0:
+        # 10分前に0を追加
+        x_data.append(datetime.datetime.now() - datetime.timedelta(minutes=10))
+        y_data.append(0)
+
+        # 現在時刻に0を追加
+        x_data.append(datetime.datetime.now())
+        y_data.append(0)
+
+    # データが入ってる場合の処理
+    else:    
+        # グラフの開始点として、一番古いデータの10分前に0をプロット
+        x_data.append(qs.earliest('created_at').created_at - datetime.timedelta(minutes=10))
+        y_data.append(0)
+
+        # 累計アルコール摂取量を加算していく。
+        for q in qs:
+            sum_alcohol += q.get_1cup_alcohol_amount()
+            x_data.append(q.created_at.astimezone(tz.gettz('Asia/Tokyo')))
+            y_data.append(sum_alcohol)
     
     graph_data['x'] = x_data
     graph_data['y'] = y_data

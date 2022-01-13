@@ -1,3 +1,5 @@
+import datetime
+
 import io
 import matplotlib
 import matplotlib.dates as mdates
@@ -6,8 +8,8 @@ matplotlib.use('Agg')
 import japanize_matplotlib
 
 from .models import AlcoholLogList
-from .calc import *
-from .date import *
+from .calc import get_graph_data
+from .date import get_start_day
 
 #グラフ作成
 def setPlt(request):
@@ -15,6 +17,7 @@ def setPlt(request):
     qs = AlcoholLogList.objects.filter(user=request.user, created_at__gte=get_start_day(term)).order_by('created_at')
     x = get_graph_data(qs, term)['x']
     y = get_graph_data(qs, term)['y']
+    jst = datetime.timezone(datetime.timedelta(hours=9))
 
     print(f'x = {x}')
     print(f'y = {y}')
@@ -24,15 +27,15 @@ def setPlt(request):
 
     ax.plot(x, y)
 
-    # 期間ごとに軸のメモリを設定する。
+    # 期間に合わせてx軸のメモリを設定する。
     if term == 'today':
         interval = 1
         format = '%H:%M'
 
-        # Formatterでx軸の日付ラベルを設定
-        xfmt = mdates.DateFormatter(format)
+        # x軸の日付ラベルを設定
+        xfmt = mdates.DateFormatter(format, tz=jst)
 
-        # MinuteLocatorで間隔を分に
+        # 間隔を時間に
         xloc = mdates.HourLocator(interval=interval)
 
     elif term in ['week', 'month', 'half_year', 'all']:
@@ -47,15 +50,18 @@ def setPlt(request):
             format = '%-m/%-d'
 
         # Formatterでx軸の日付ラベルを月・日に設定
-        xfmt = mdates.DateFormatter(format)
+        xfmt = mdates.DateFormatter(format, tz=jst)
 
         # DayLocatorで間隔を日数に
         xloc = mdates.DayLocator(interval=interval)
         ax.xaxis.set_minor_locator(mdates.DayLocator(interval=1))
         
-    # 設定した軸の項目を反映させる
+    # 設定したx軸の項目を反映させる
     ax.xaxis.set_major_locator(xloc)
     ax.xaxis.set_major_formatter(xfmt)
+
+    # y軸の最小値を0にする
+    ax.set_ylim(0)
 
     # 軸のフォントサイズ
     x_labels = ax.get_xticklabels()

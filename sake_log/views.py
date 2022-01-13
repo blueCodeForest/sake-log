@@ -46,7 +46,7 @@ class IndexView(LoginRequiredMixin, ListView):
         # 酔い度合い
         status_form = StatusForm()
         context['status_form'] = status_form
-        status = StatusList.objects.filter(user=self.request.user).order_by('-created_at').first()
+        status = StatusList.objects.filter(user=self.request.user, created_at__gte=get_am6_dt()).order_by('-created_at').first()
         context['status'] = status
 
         # ログインユーザーをセッションに追加
