@@ -5,22 +5,37 @@
 
 {% block graph %}
 {% endblock %}
-
+<div class="col-11 mt-2 mb-3 mx-auto bg-white rounded border border-danger shadow-sm">
+    <img class="img-responsive center-block" src="{% url 'sake_log:graph'%}?term={{ term }}" width="100%" alt="折れ線グラフ">
+</div>
 <div class="row">
-{% for drink in drinks %}
-<div class="col-12 col-lg-6">
-    <!-- 同じカードスタイルだと押せると思われるから、
-    履歴表示を強調したスタイルにする -->
-    <div class="card rounded mb-2">
-            <div class="container">
-                <div class="row py-2">
-                    <div class="col- pl-3 d-flex align-items-center">
-                        <span class="align-middle drink-name">{{ drink.drank_card.name }}({{ drink.drank_card.amount }}) : {{ drink.created_at|date }}</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div>
+        <a href="{% url 'sake_log:log' 'today' %}">今日</a>
+         | 
+        <a href="{% url 'sake_log:log' 'week' %}">1週間</a>
+         | 
+        <a href="{% url 'sake_log:log' 'month' %}">1ヶ月</a>
+         | 
+        <a href="{% url 'sake_log:log' 'half_year' %}">半年</a>
+         | 
     </div>
-{% endfor %}
+    <table class="table">
+        <thead>
+            <tr>
+            <th scope="col">ドリンク</th>
+            <th scope="col">日付</th>
+            <th scope="col">時刻</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for drink in drinks %}
+             <tr>
+                 <th scope="row">{{ drink.drank_card.name }}({{ drink.drank_card.amount }})</th>
+                <td>{{ drink.created_at|date:"n / j" }}</td>
+                <td>{{ drink.created_at|date:"H:i" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}

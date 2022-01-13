@@ -33,10 +33,11 @@ class DisplayAlcoholList(models.Model):
 
 
 
-class DrankAlcoholList(models.Model):
+class AlcoholLogList(models.Model):
     drank_card = models.ForeignKey(DisplayAlcoholList, on_delete=models.CASCADE, related_name='drank_cards')
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
+    # created_at = models.DateTimeField()
     updated_at = models.DateTimeField(auto_now=True)
 
     def tuple_to_dict(self, tpl):
@@ -45,15 +46,15 @@ class DrankAlcoholList(models.Model):
             new_dict[key] = value
         return new_dict
 
+    # AMOUNT_LISTから容量(ml)を取得
     def get_amount_ml(self):
-        # AMOUNT_LISTから容量(ml)を取得
         amount_str = self.tuple_to_dict(DisplayAlcoholList.AMOUNT_LIST)[self.drank_card.amount]
         amount_ml = int(re.sub(r"\D", "", amount_str))
         return amount_ml
 
+    # 1杯あたりのアルコール量を計算
     def get_1cup_alcohol_amount(self):
-        # 1杯あたりのアルコール量を計算
-        return self.get_amount_ml() * self.drank_card.alcohol_degree / 100
+        return round(self.get_amount_ml() * self.drank_card.alcohol_degree / 100)
     
     def __str__(self):
         return self.drank_card.name

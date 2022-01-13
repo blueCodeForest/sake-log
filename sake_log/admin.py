@@ -1,12 +1,12 @@
 from django.contrib import admin
 
-from .models import DisplayAlcoholList, DrankAlcoholList, StatusList
+from .models import DisplayAlcoholList, AlcoholLogList, StatusList
 
 admin.site.register(DisplayAlcoholList)
-# admin.site.register(DrankAlcoholList)
+# admin.site.register(AlcoholLogList)
 admin.site.register(StatusList)
 
-@admin.register(DrankAlcoholList)
+@admin.register(AlcoholLogList)
 class DrankAlcoholAdmin(admin.ModelAdmin):
-    model = DrankAlcoholList
+    model = AlcoholLogList
     list_display = ["drank_card", "user", "created_at"]

@@ -10,6 +10,6 @@ urlpatterns = [
     path('count-up', views.count_up, name='count_up'),
     path('count-down', views.count_down, name='count_down'),
     path('status', views.change_status, name='change_status'),
-    path('log/<str:term>', views.DrankAlcoholView.as_view(), name='log'),
-    # path('drank', views.DrankAlcoholView.as_view(), name='drank_list'),
+    path('log/<str:term>', views.AlcoholLogView.as_view(), name='log'),
+    path('graph', views.get_graph, name='graph'),
 ]
