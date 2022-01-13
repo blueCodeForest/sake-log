@@ -106,17 +106,17 @@ def get_graph_data_today(qs):
     # データが空の場合、0をプロットする
     if qs.count() == 0:
         # 10分前に0を追加
-        x_data.append(datetime.datetime.now() - datetime.timedelta(minutes=10))
+        x_data.append(datetime.datetime.now().astimezone(tz.gettz('Asia/Tokyo')) - datetime.timedelta(minutes=10))
         y_data.append(0)
 
         # 現在時刻に0を追加
-        x_data.append(datetime.datetime.now())
+        x_data.append(datetime.datetime.now().astimezone(tz.gettz('Asia/Tokyo')))
         y_data.append(0)
 
     # データが入ってる場合の処理
     else:    
         # グラフの開始点として、一番古いデータの10分前に0をプロット
-        x_data.append(qs.earliest('created_at').created_at - datetime.timedelta(minutes=10))
+        x_data.append(qs.earliest('created_at').created_at.astimezone(tz.gettz('Asia/Tokyo')) - datetime.timedelta(minutes=10))
         y_data.append(0)
 
         # 累計アルコール摂取量を加算していく。
