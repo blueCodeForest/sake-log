@@ -1,3 +1,5 @@
+# graph.py -> グラフの描画に関する処理
+
 import datetime
 
 import io
@@ -25,37 +27,16 @@ def setPlt(request):
     fig = plt.figure(figsize=(5,2.5))
     ax = fig.add_subplot(1, 1, 1)
 
+    # プロット！！
     ax.plot(x, y)
 
-    # 期間に合わせてx軸のメモリを設定する。
-    if term == 'today':
-        interval = 1
-        format = '%H:%M'
+    # データに応じてx軸に適切なメモリを設定する
+    xloc = mdates.AutoDateLocator()
+    xfmt = mdates.AutoDateFormatter(xloc, tz=jst)
+    xfmt.scaled[1/(60 * 24)] = '%H:%M'
+    xfmt.scaled[1] = '%-d'
+    xfmt.scaled[30] = '%-m月'
 
-        # x軸の日付ラベルを設定
-        xfmt = mdates.DateFormatter(format, tz=jst)
-
-        # 間隔を時間に
-        xloc = mdates.HourLocator(interval=interval)
-
-    elif term in ['week', 'month', 'half_year', 'all']:
-        if term == 'week':
-            interval = 1
-            format = '%-d'
-        elif term == 'month':
-            interval = 4
-            format = '%-d'
-        elif term == 'half_year':
-            interval = 30
-            format = '%-m/%-d'
-
-        # Formatterでx軸の日付ラベルを月・日に設定
-        xfmt = mdates.DateFormatter(format, tz=jst)
-
-        # DayLocatorで間隔を日数に
-        xloc = mdates.DayLocator(interval=interval)
-        ax.xaxis.set_minor_locator(mdates.DayLocator(interval=1))
-        
     # 設定したx軸の項目を反映させる
     ax.xaxis.set_major_locator(xloc)
     ax.xaxis.set_major_formatter(xfmt)
@@ -71,9 +52,6 @@ def setPlt(request):
 
     # グラフのタイトル
     plt.title('アルコール摂取量(g)', fontsize=8)
-
-    # プロット！！
-    plt.plot(x,y)
 
     # グリッド線を追加
     plt.grid()

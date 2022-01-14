@@ -1,3 +1,5 @@
+# date.py -> 日付に関する処理
+
 import datetime
 from dateutil.relativedelta import relativedelta
 from dateutil import tz

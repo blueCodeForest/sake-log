@@ -1,3 +1,5 @@
+# calc.py -> データを加工する処理
+
 import datetime
 from dateutil.relativedelta import relativedelta
 from dateutil import tz
