@@ -26,10 +26,13 @@ def setPlt(request):
 
     fig = plt.figure(figsize=(5,2.5))
     ax = fig.add_subplot(1, 1, 1)
-
-    # プロット！！
-    ax.plot(x, y)
-
+    
+    # 期間に応じて折線グラフと棒グラフを使い分ける
+    if term == 'today':
+        ax.plot(x, y)
+    elif term in ['week', 'month', 'half_year', 'all']:
+        ax.bar(x, y)
+        
     # データに応じてx軸に適切なメモリを設定する
     xloc = mdates.AutoDateLocator()
     xfmt = mdates.AutoDateFormatter(xloc, tz=jst)
