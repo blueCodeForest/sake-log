@@ -36,28 +36,11 @@ def qs_to_dict(qs, term):
                     qs_dict[get_am6_dt(qs[i].created_at).date()] = sum_alcohol
                     sum_alcohol = 0
 
-                # 最後のクエリのデータを反映させる
-                else:
-                    qs_dict[get_am6_dt(qs[i].created_at).date()] = sum_alcohol
+            # 最後のクエリのデータを反映させる
+            else:
+                qs_dict[get_am6_dt(qs[i].created_at).date()] = sum_alcohol
+                print(f'ラストクエリ：{get_am6_dt(qs[i].created_at).date()}')
     
-    # 月ごとにアルコール量を集計する
-    # elif term in ['all']:
-    #     # クエリセットからクエリをひとつずつ取り出す
-    #     for i in range(qs.count()):
-    #         # アルコール量を加算
-    #         sum_alcohol += qs[i].get_1cup_alcohol_amount()
-    #         # 次のクエリが存在するか確認
-    #         if i + 1 < len(qs):
-        
-    #             # 次のクエリと月が異なればデータに追加し、アルコール量をリセット
-    #             if get_am6_dt(qs[i].created_at).month != get_am6_dt(qs[i+1].created_at).month:
-    #                 qs_dict[get_am6_dt(qs[i].created_at).month] = sum_alcohol
-    #                 sum_alcohol = 0
-
-    #         # 最後のクエリのデータを反映させる
-    #         else:
-    #             qs_dict[get_am6_dt(qs[i].created_at).month] = sum_alcohol
-
     return qs_dict
 
 # 飲まなかった日に0のデータを追加する
