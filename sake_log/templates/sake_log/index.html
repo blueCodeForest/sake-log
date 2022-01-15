@@ -35,7 +35,7 @@
                         <span class="align-middle drink-name">{{ drink.name }}({{ drink.amount }})</span>
                         <span class="align-middle">
                             <span class="font-weight-bold text-danger ml-2">{{ drink.cups }}</span>
-                            杯<span class="invisible">目 [{{ drink.alcohol_log.all.last.created_at|date:"H:i" }} 〜]</span>
+                            杯<span class="d-none">目 [{{ drink.alcohol_log.all.last.created_at|date:"H:i" }} 〜]</span>
                         </span>
                         {% comment %} <div class="row">
                             <div class="col-10 align-middle drink-name">{{ drink.name }}({{ drink.amount }})</div>
