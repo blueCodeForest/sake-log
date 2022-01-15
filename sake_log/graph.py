@@ -50,11 +50,11 @@ def setPlt(request):
     # 軸のフォントサイズ
     x_labels = ax.get_xticklabels()
     y_labels = ax.get_yticklabels()
-    plt.setp(x_labels, fontsize=6);
-    plt.setp(y_labels, fontsize=6);
+    plt.setp(x_labels, fontsize=10);
+    plt.setp(y_labels, fontsize=10);
 
     # グラフのタイトル
-    plt.title('アルコール摂取量(g)', fontsize=8)
+    plt.title('アルコール摂取量(g)', fontsize=12)
 
     # グリッド線を追加
     plt.grid()
