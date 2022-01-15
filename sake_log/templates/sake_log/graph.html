@@ -1,9 +1,9 @@
-{% extends "sake_log/log.html" %}
+{% extends "sake_log/templates/sake_log/log.html" %}
 {% load static %}
 
 {% block graph %}
 ここにグラフが表示されます
-<div class="col-11 mt-5 mx-auto bg-white rounded border border-danger p-4 shadow-sm">
-    <img class="img-responsive center-block" src="{% url 'sake_log:graph' 'half_year' %}" width=600 height=600 alt="折れ線グラフ">
+<div class="col-11 mt-2 mb-3 mx-auto bg-white rounded border border-danger shadow-sm">
+    <img class="img-responsive center-block" src="{% url 'sake_log:graph'%}?term={{ term }}" width="100%" alt="折れ線グラフ">
 </div>
 {% endblock %}

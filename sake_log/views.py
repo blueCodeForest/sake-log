@@ -1,8 +1,11 @@
+from urllib import parse
+
 from django.http.response import HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, UpdateView, CreateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, Q
+from django.urls import reverse
 
 from .models import DisplayAlcoholList, AlcoholLogList, StatusList
 from .forms import StatusForm, DrinkForm
@@ -28,25 +31,16 @@ class IndexView(LoginRequiredMixin, ListView):
     model = DisplayAlcoholList
     context_object_name = 'drinks'
 
-    def calc_sum_alcohol_amount(self):
-        # 正味アルコール摂取量を合計する
-        drinks = AlcoholLogList.objects.filter(user=self.request.user, created_at__gte=get_am6_dt())
-        sum_alcohol_amount = 0
-        for drink in drinks:
-            sum_alcohol_amount += drink.get_1cup_alcohol_amount()
-        sum_alcohol_amount = round(sum_alcohol_amount)
-        return sum_alcohol_amount
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
         # 摂取した総アルコール量
-        context['sum_alcohol_amount'] = self.calc_sum_alcohol_amount()
+        context['sum_alcohol_amount'] = get_sum_alcohol_amount(self.request)
 
         # 酔い度合い
         status_form = StatusForm()
         context['status_form'] = status_form
-        status = StatusList.objects.filter(user=self.request.user, created_at__gte=get_am6_dt()).order_by('-created_at').first()
+        status = StatusList.objects.filter(user=self.request.user, created_at__gte=get_am6_dt()).order_by('created_at').last()
         context['status'] = status
 
         # ログインユーザーをセッションに追加
@@ -57,8 +51,10 @@ class IndexView(LoginRequiredMixin, ListView):
     def get_queryset(self, **kwargs):
         queryset = super().get_queryset(**kwargs)
 
-        # 基準時間以降に飲んだ量をcups変数にセット
-        queryset = queryset.filter(user=self.request.user).annotate(cups=Count('drank_cards', filter=Q(drank_cards__created_at__gte=get_am6_dt())))
+        # 基準時間以降に飲んだ杯数を保持するcupsカラムを追加
+        queryset = queryset.filter(user=self.request.user).annotate(
+            cups=Count('alcohol_log', filter=Q(alcohol_log__created_at__gte=get_am6_dt()))
+            )
 
         return queryset
 
@@ -82,6 +78,10 @@ class AlcoholLogView(LoginRequiredMixin, ListView):
 
         return queryset
 
+# マイページビュー
+class MyPageView(LoginRequiredMixin, ListView):
+    pass
+
 # グラフを描画する
 def get_graph(request):
     setPlt(request)  
@@ -91,17 +91,24 @@ def get_graph(request):
     return response
 
 def count_up(request):
-    drank_card_id = request.POST.get('drank_card_id')
+    # templateから追加するアルコールのidを取得
+    # idをセッションに格納
+    alcohol_id = request.session['drinking_id'] = request.POST.get('alcohol_id')
     user = request.user
-    AlcoholLogList.objects.create(drank_card_id=drank_card_id, user=user)
+
+    print(f'session : {request.session.get("drinking_id")}')
+
+    # 新規オブジェクトを作成
+    AlcoholLogList.objects.create(alcohol_id=alcohol_id, user=user)
 
     return redirect('sake_log:index')
 
 
 def count_down(request):
-    drank_card_id = request.POST.get('drank_card_id')
+    alcohol_id = request.POST.get('alcohol_id')
+    request.session['drinking_id'] = 0
     user = request.user
-    delete_record = AlcoholLogList.objects.filter(drank_card_id=drank_card_id, user=user).last()
+    delete_record = AlcoholLogList.objects.filter(alcohol_id=alcohol_id, user=user, created_at__gte=get_am6_dt()).last()
     
     if delete_record:
         delete_record.delete()

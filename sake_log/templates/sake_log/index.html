@@ -3,45 +3,53 @@
 
 {% block main %}
 <div class="row">
-    <div class="col-11 col-lg-6 my-5 mx-auto bg-white rounded border border-danger p-4 shadow-sm">
-        <div class="">
-            <h1 class="heading text-center bg-danger text-white py-2"><i class="fas fa-beer"></i> アルコール摂取量</h1>
+        <div class="col-11 col-lg-6 my-5 mx-auto bg-white rounded border border-danger p-4 shadow-sm">
+            <div>
+                <h1 class="heading text-center bg-danger text-white py-2"><i class="fas fa-beer"></i> アルコール摂取量</h1>
+            </div>
+            <div class="al-g text-center my-3 text-danger">
+                {{ sum_alcohol_amount }}g
+            </div>
+            <div class="text-center">
+                <form method="POST" action="{% url 'sake_log:change_status' %}">
+                    <select class="form-select" name="status" id="id_status" onchange="submit(this.form)">
+                        <option hidden>{% if status %}{{ status.get_status_display }}{% else %}酔い度合い{% endif %}</option>
+                        <option value="0">素面</option>
+                        <option value="1">ほんのり酔ってきた</option>
+                        <option value="2">酔っぱらった</option>
+                        <option value="3">世界が歪んで見える</option>
+                        <option value="4">限界です</option>
+                    </select>
+                    {% csrf_token %}
+                </form>
+            </div>
         </div>
-        <div class="al-g text-center my-3 text-danger">
-            {{ sum_alcohol_amount }}g
-        </div>
-        <div class="text-center">
-            <form method="POST" action="{% url 'sake_log:change_status' %}">
-                <select class="form-select" name="status" id="id_status" onchange="submit(this.form)">
-                    <option hidden>{% if status %}{{ status.get_status_display }}{% else %}酔い度合い{% endif %}</option>
-                    <option value="0">素面</option>
-                    <option value="1">ほんのり酔ってきた</option>
-                    <option value="2">酔っぱらった</option>
-                    <option value="3">世界が歪んで見える</option>
-                    <option value="4">限界です</option>
-                </select>
-                {% csrf_token %}
-            </form>
-        </div>
-    </div>
 </div>
 <div class="row">
-{% for drink in drinks %}
-<div class="col-12 col-lg-6">
-    <div class="card rounded mb-2">
+    {% for drink in drinks %}
+    <div class="col-12 col-lg-6">
+        <div class="card rounded mb-2 smooth" id="drink_{{ drink.id }}">
             <div class="container">
                 <div class="row py-2">
                     <div class="col-8 pl-3 d-flex align-items-center">
-                        <span class="align-middle drink-name">{{ drink.name }}({{ drink.amount }})</a> <span class="font-weight-bold text-danger ml-2 pr-1">{{ drink.cups }}</span>杯</span>
+                        <span class="align-middle drink-name">{{ drink.name }}({{ drink.amount }})</span>
+                        <span class="align-middle">
+                            <span class="font-weight-bold text-danger ml-2">{{ drink.cups }}</span>
+                            杯<span class="invisible">目 [{{ drink.alcohol_log.all.last.created_at|date:"H:i" }} 〜]</span>
+                        </span>
+                        {% comment %} <div class="row">
+                            <div class="col-10 align-middle drink-name">{{ drink.name }}({{ drink.amount }})</div>
+                            <div class="col-2"><span class="font-weight-bold text-danger ml-2 pr-1">{{ drink.cups }}</span>杯</div>
+                        </div>     {% endcomment %}
                     </div>
                     <div class="col-4 d-flex align-items-center justify-content-end">
                         <form class="inline" action="{% url 'sake_log:count_up' %}" method="POST">
-                            <input type="hidden" name="drank_card_id" value="{{ drink.id }}">
+                            <input type="hidden" name="alcohol_id" value="{{ drink.id }}">
                             <button class="btn btn-outline-danger mx-1 degree-btn text-right" type="SUBMIT">▲</button>
                             {% csrf_token %}
                         </form>
                         <form class="inline" action="{% url 'sake_log:count_down' %}" method="POST">
-                            <input type="hidden" name="drank_card_id" value="{{ drink.id }}">
+                            <input type="hidden" name="alcohol_id" value="{{ drink.id }}">
                             <button class="btn btn-outline-danger mx-1 degree-btn text-right" type="SUBMIT">▼</button>
                             {% csrf_token %}
                         </form>
@@ -54,17 +62,17 @@
     {% endfor %}
     <div class="col-12 col-lg-6">
         <div class="card rounded mb-2">
-        <div class="container">
-            <div class="row py-2">
-                <div class="col-1 pl-3 d-flex align-items-center">
-                    <i class="fas fa-plus text-pink plus-icon "></i>
-                </div>
-                <div class="col-8 pl-0 d-flex align-items-center drink-name my-1">
-                    ドリンクを追加
+            <div class="container">
+                <div class="row py-2">
+                    <div class="col-1 pl-3 d-flex align-items-center">
+                        <i class="fas fa-plus text-pink plus-icon "></i>
+                    </div>
+                    <div class="col-8 pl-0 d-flex align-items-center drink-name my-1">
+                        ドリンクを追加
+                    </div>
                 </div>
             </div>
+            <a href="{% url 'sake_log:create' %}"  class="stretched-link"></a>
         </div>
-        <a href="{% url 'sake_log:create' %}"  class="stretched-link"></a>
     </div>
-</div>
-{% endblock %}
+    {% endblock %}

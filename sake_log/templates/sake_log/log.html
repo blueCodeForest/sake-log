@@ -3,8 +3,6 @@
 
 {% block main %}
 
-{% block graph %}
-{% endblock %}
 <div class="col-11 mt-2 mb-3 mx-auto bg-white rounded border border-danger shadow-sm">
     <img class="img-responsive center-block" src="{% url 'sake_log:graph'%}?term={{ term }}" width="100%" alt="折れ線グラフ">
 </div>
@@ -30,7 +28,7 @@
         <tbody>
             {% for drink in drinks %}
              <tr>
-                 <th scope="row">{{ drink.drank_card.name }}({{ drink.drank_card.amount }})</th>
+                 <th scope="row">{{ drink.alcohol.name }}({{ drink.alcohol.amount }})</th>
                 <td>{{ drink.created_at|date:"n / j" }}</td>
                 <td>{{ drink.created_at|date:"H:i" }}</td>
             </tr>

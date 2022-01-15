@@ -3,9 +3,18 @@
 import datetime
 from dateutil.relativedelta import relativedelta
 from dateutil import tz
+
+from .models import AlcoholLogList
 from .date import get_am6_dt
 
-
+# 正味アルコール摂取量を合計する
+def get_sum_alcohol_amount(request):
+        drinks = AlcoholLogList.objects.filter(user=request.user, created_at__gte=get_am6_dt())
+        sum_alcohol_amount = 0
+        for drink in drinks:
+            sum_alcohol_amount += drink.get_1cup_alcohol_amount()
+        sum_alcohol_amount = round(sum_alcohol_amount)
+        return sum_alcohol_amount
 
 # クエリセットを期間に応じて辞書に加工する
 def qs_to_dict(qs, term):

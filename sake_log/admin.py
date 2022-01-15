@@ -9,4 +9,4 @@ admin.site.register(StatusList)
 @admin.register(AlcoholLogList)
 class DrankAlcoholAdmin(admin.ModelAdmin):
     model = AlcoholLogList
-    list_display = ["drank_card", "user", "created_at"]
+    list_display = ["alcohol", "user", "created_at"]
