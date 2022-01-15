@@ -106,12 +106,17 @@ def count_up(request):
 
 def count_down(request):
     alcohol_id = request.POST.get('alcohol_id')
-    request.session['drinking_id'] = 0
     user = request.user
+
+    # 受け取ったidの最新レコードを削除する
     delete_record = AlcoholLogList.objects.filter(alcohol_id=alcohol_id, user=user, created_at__gte=get_am6_dt()).last()
-    
     if delete_record:
         delete_record.delete()
+    
+    # それがアクティブだった場合、アクティブ状態を解除する。
+    if alcohol_id == request.session['drinking_id']:
+        request.session['drinking_id'] = 0
+        
 
     return redirect('sake_log:index')
 
