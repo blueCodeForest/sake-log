@@ -39,7 +39,6 @@ def qs_to_dict(qs, term):
             # 最後のクエリのデータを反映させる
             else:
                 qs_dict[get_am6_dt(qs[i].created_at).date()] = sum_alcohol
-                print(f'ラストクエリ：{get_am6_dt(qs[i].created_at).date()}')
     
     return qs_dict
 
@@ -121,8 +120,6 @@ def get_graph_data_today(qs):
     
     graph_data['x'] = x_data
     graph_data['y'] = y_data
-
-    print(f'graph_data : {graph_data}')
 
     return graph_data
 
