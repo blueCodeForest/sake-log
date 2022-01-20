@@ -54,7 +54,7 @@ class AlcoholLogList(models.Model):
 
     # 1杯あたりのアルコール量を計算
     def get_1cup_alcohol_amount(self):
-        return round(self.get_amount_ml() * self.alcohol.alcohol_degree / 100)
+        return round(self.get_amount_ml() * (self.alcohol.alcohol_degree / 100) * 0.8)
     
     def __str__(self):
         return self.alcohol.name
