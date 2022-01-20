@@ -37,10 +37,6 @@
                             <span class="font-weight-bold text-danger ml-2">{{ drink.cups }}</span>
                             杯<span class="d-none">目 [{{ drink.alcohol_log.all.last.created_at|date:"H:i" }} 〜]</span>
                         </span>
-                        {% comment %} <div class="row">
-                            <div class="col-10 align-middle drink-name">{{ drink.name }}({{ drink.amount }})</div>
-                            <div class="col-2"><span class="font-weight-bold text-danger ml-2 pr-1">{{ drink.cups }}</span>杯</div>
-                        </div>     {% endcomment %}
                     </div>
                     <div class="col-4 d-flex align-items-center justify-content-end">
                         <form class="inline" action="{% url 'sake_log:count_up' %}" method="POST">
