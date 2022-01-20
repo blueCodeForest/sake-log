@@ -136,6 +136,11 @@ class EditDrink(UpdateView):
     success_url = '/'
     form_class = DrinkForm
 
+def reset_drinking_id(request):
+    request.session['drinking_id'] = 0
+    return redirect('sake_log:index')
+
+
 
 class CreateDrink(LoginRequiredMixin, CreateView):
     template_name = 'sake_log/create.html'

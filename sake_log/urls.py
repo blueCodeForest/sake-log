@@ -12,4 +12,5 @@ urlpatterns = [
     path('status', views.change_status, name='change_status'),
     path('log/<str:term>', views.AlcoholLogView.as_view(), name='log'),
     path('graph', views.get_graph, name='graph'),
+    path('reset', views.reset_drinking_id, name='reset'),
 ]

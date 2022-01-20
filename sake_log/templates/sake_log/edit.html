@@ -2,7 +2,12 @@
 
 {% block main %}
 <div class="col-11 mt-5 mx-auto bg-white rounded border border-danger p-4 shadow-sm">
-    <h1  class="heading text-center bg-danger text-white py-2">{{ drink.name }}</h1>
+    <h1  class="heading text-center bg-danger text-white py-2" id='edit_drink_{{ drink.id }}'>{{ drink.name }}
+        {% if request.session.drinking_id == 1 %}
+        {% comment %} {% if drinking_id == 1 %} {% endcomment %}
+        飲酒中
+        {% endif %}
+    </h1>
     <form method="post" novalidate>
         {% for item in form %}
         <div class="form-group">
@@ -12,10 +17,13 @@
         {% endfor %}
         {% csrf_token %}
     <div class="row mt-4">
-        <div class="col-6">
+        <div class="col-4">
             <a href="{% url 'sake_log:index' %}" class="btn btn-outline-secondary">戻る</a>
         </div>
-        <div class="col-6 ml-auto">
+        <div class="col-4 invisible">
+            <a href="{% url 'sake_log:reset' %}" class="btn btn-danger mx-auto d-block">完飲</a>
+        </div>
+        <div class="col-4 ml-auto">
             <div class="text-right">
                 <input type="submit" class="btn btn-outline-danger" value="保存">
             </div>
