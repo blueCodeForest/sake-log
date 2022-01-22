@@ -4,7 +4,6 @@
 <div class="col-11 mt-5 mx-auto bg-white rounded border border-danger p-4 shadow-sm">
     <h1  class="heading text-center bg-danger text-white py-2" id='edit_drink_{{ drink.id }}'>{{ drink.name }}
         {% if request.session.drinking_id == 1 %}
-        {% comment %} {% if drinking_id == 1 %} {% endcomment %}
         飲酒中
         {% endif %}
     </h1>
