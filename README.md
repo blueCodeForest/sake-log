@@ -19,3 +19,6 @@
 
 * Shun Kimura
 * tokinari.pp@gmail.com
+
+# test
+branchを切るテストです。
